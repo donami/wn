@@ -1,51 +1,27 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  ToastAndroid,
-} from 'react-native';
-import { firestore } from '../config/firebase';
+import { StyleSheet, View } from 'react-native';
+import Trending from '../components/trending';
+import { Tile, Title, Subtitle, Overlay, ImageBackground } from '@shoutem/ui';
 
 export default function MyDrinksScreen({ navigation }) {
-  const [title, setTitle] = useState('');
-
   return (
     <View style={styles.container}>
-      <Text>This is My drinks screen</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          value={title}
-          placeholder='Title of the drink'
-          style={styles.textInput}
-          onChangeText={value => setTitle(value)}
-        />
-
-        <Button
-          onPress={() => {
-            firestore
-              .collection('drinks')
-              .add({
-                title,
-              })
-              .then(doc => {
-                ToastAndroid.showWithGravity(
-                  'Drink created!',
-                  ToastAndroid.SHORT,
-                  ToastAndroid.CENTER
-                );
-              });
-          }}
-          title='Add the drink'
-          color='#841584'
-        />
-      </View>
-
-      <Button
-        title='Go to About'
-        onPress={() => navigation.navigate('About')}
+      <ImageBackground
+        styleName='large-banner'
+        source={require('../assets/christmas-drink.jpg')}
+      >
+        <Tile>
+          <Overlay styleName='image-overlay'>
+            <Title styleName='sm-gutter-horizontal'>
+              Try out this delicious drink with the taste of christmas
+            </Title>
+            <Subtitle>Winter is coming...</Subtitle>
+          </Overlay>
+        </Tile>
+      </ImageBackground>
+      <Trending
+        navigation={navigation}
+        containerStyle={styles.trendingContainer}
       />
     </View>
   );
@@ -53,22 +29,19 @@ export default function MyDrinksScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 8,
-    backgroundColor: 'white',
-    padding: 40,
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#EEF1FB',
   },
-  inputContainer: {
-    margin: 30,
+  trendingContainer: {
+    marginTop: 20,
+    padding: 20,
   },
-  textInput: {
-    height: 30,
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 10,
-    fontSize: 24,
-    borderWidth: 1,
-    borderBottomColor: '#111111',
+  titleStyle: {
+    color: '#111',
+    fontFamily: 'Montserrat',
+  },
+  captionStyle: {
+    color: '#999',
+    fontFamily: 'Montserrat',
   },
 });

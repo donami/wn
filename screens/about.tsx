@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import Text from '../components/text';
 
-export default function AboutScreen() {
+const AboutScreen = () => {
   return (
     <View style={styles.container}>
       <Text>About</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -18,3 +19,5 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
 });
+
+export default AboutScreen;

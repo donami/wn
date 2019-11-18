@@ -5,8 +5,10 @@ export type Drink = {
   image?: string;
   ingredients: {
     ingredient: Ingredient;
+    optional?: boolean;
     amount: string;
   };
+  tags: string[];
 };
 
 export type Ingredient = {
@@ -14,4 +16,9 @@ export type Ingredient = {
   title: string;
   description: string;
   image?: string;
+};
+
+export type Tag = {
+  id: string;
+  title: string;
 };

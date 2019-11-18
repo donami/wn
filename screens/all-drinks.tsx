@@ -1,71 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import { ListItem } from 'react-native-elements';
-import { firestore } from '../config/firebase';
-
-// function Item({ title, navigation }) {
-//   return (
-//     <View
-//       style={styles.item}
-//       onTouchEnd={() => {
-//         navigation.navigate('Drink');
-//       }}
-//     >
-//       <Text style={styles.title}>{title}</Text>
-//     </View>
-//   );
-// }
+import React from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
+import DrinkListItem from '../components/drink-list-item';
+import Loader from '../components/loader';
+import useDataLoaded from '../hooks/data-loaded';
+import { Drink } from '../types/models';
 
 const renderItem = ({ item, navigation }) => (
-  <ListItem
-    title={item.title}
-    subtitle='test'
-    onPress={() => navigation.navigate('Drink', { id: item.id })}
-    leftAvatar={{
-      source: item.image && { uri: item.image },
-      title: item.title[0],
-    }}
-    bottomDivider
-    chevron
-  />
+  <DrinkListItem item={item} navigation={navigation} />
 );
 
-export default function AllDrinksScreen({ navigation }) {
-  const [drinks, setDrinks] = useState([]);
+const AllDrinksScreen = ({ navigation }) => {
+  const drinks = useSelector(state => state.drinks.items);
+  const [dataIsLoaded] = useDataLoaded(['drinks']);
 
-  useEffect(() => {
-    firestore
-      .collection('drinks')
-      .get()
-      .then(querySnapshot => {
-        const items = querySnapshot.docs.map(item => {
-          const data = item.data();
-          return {
-            id: item.id,
-            title: data.title,
-            image: data.image,
-          };
-        });
-        setDrinks(items);
-      });
-  }, []);
+  if (!dataIsLoaded) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
         data={drinks}
         renderItem={args => renderItem({ ...args, navigation })}
-        keyExtractor={item => item.id}
+        keyExtractor={(item: Drink) => item.id}
       />
     </View>
   );
-}
+};
+
+export default AllDrinksScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 8,
-    backgroundColor: 'white',
-    padding: 40,
+    flex: 1,
+    backgroundColor: '#EEF1FB',
   },
   item: {
     backgroundColor: '#f9c2ff',
