@@ -7,7 +7,11 @@ export const selectDrink = (itemId: string) => ({
 });
 
 export const fetchDrinksIfNeeded = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const drinkState = getState().app;
+    if (drinkState.loading || drinkState.loaded) {
+      return;
+    }
     dispatch({
       type: 'FETCH_DRINKS',
     });
@@ -56,6 +60,7 @@ export const fetchDrinksIfNeeded = () => {
           return {
             id: item.id,
             title: data.title,
+            tags: data.tags || [],
             image: data.image,
             ingredients: (data.ingredients || []).map(ingredient => {
               return {
@@ -75,7 +80,6 @@ export const fetchDrinksIfNeeded = () => {
         });
       })
       .catch(error => {
-        console.error(error);
         dispatch({
           type: 'FETCH_DRINKS_FAILURE',
           payload: {

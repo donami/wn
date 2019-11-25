@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import DrinkListItem from '../components/drink-list-item';
 import { useSelector } from 'react-redux';
 import { getFavoriteEntities } from '../redux/selectors/favorites';
 import useDataLoaded from '../hooks/data-loaded';
 import Loader from '../components/loader';
 import { Drink } from '../types/models';
+import { Text } from '@shoutem/ui';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
@@ -21,11 +22,22 @@ const FavoritesScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={favorites || []}
-        renderItem={args => renderItem({ ...args, navigation })}
-        keyExtractor={(item: Drink) => item.id}
-      />
+      {!!favorites.length && (
+        <FlatList
+          data={favorites || []}
+          renderItem={args => renderItem({ ...args, navigation })}
+          keyExtractor={(item: Drink) => item.id}
+        />
+      )}
+      {!favorites.length && (
+        <View style={styles.noFavorites}>
+          <Text>You do not have any favorites added yet. </Text>
+
+          <Text style={{ marginVertical: 10 }}>
+            Add a favorite by clicking on the heart on the drink page.
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -36,5 +48,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEF1FB',
+  },
+  noFavorites: {
+    backgroundColor: 'white',
+    padding: 15,
+    margin: 40,
   },
 });

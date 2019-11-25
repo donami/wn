@@ -3,35 +3,36 @@ import {
   // View,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
   StyleProp,
 } from 'react-native';
 // import { Image } from 'react-native-elements';
-import { getFavoriteEntities } from '../redux/selectors/favorites';
 import { getDrinksLoading } from '../redux/selectors/drinks';
 import { useSelector } from 'react-redux';
-import DrinkListItem from './drink-list-item';
 import { Card, Image, Subtitle, Caption, View, Title } from '@shoutem/ui';
 import Loader from './loader';
-
-const renderItem = ({ item, navigation }) => (
-  <DrinkListItem item={item} navigation={navigation} />
-);
+import useDataLoaded from '../hooks/data-loaded';
+import { getTrendingEntities } from '../redux/selectors/app';
 
 type Props = {
   navigation: any;
   containerStyle?: StyleProp<any>;
 };
 const Trending: React.FC<Props> = ({ containerStyle = {}, navigation }) => {
-  const favorites = useSelector(state => getFavoriteEntities(state));
   const loading = useSelector(state => getDrinksLoading(state));
+
+  const [dataIsLoaded] = useDataLoaded(['drinks', 'app']);
+  const trendingItems = useSelector(state => getTrendingEntities(state));
+
+  if (!dataIsLoaded) {
+    return <Loader />;
+  }
 
   return (
     <View style={{ ...styles.container, ...containerStyle }}>
       <Title style={{ marginBottom: 5 }}>Trending</Title>
       {loading && <Loader />}
       <ScrollView style={styles.itemsContainer} horizontal>
-        {favorites.map(item => {
+        {(trendingItems || []).map(item => {
           return (
             <Card
               style={{ marginRight: 10, width: 120, maxHeight: 160 }}

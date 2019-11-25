@@ -187,7 +187,7 @@ const DrinkScreen = ({ navigation }) => {
               </View>
             )}
 
-            {ingredients && (
+            {ingredients && !!ingredients.length && (
               <View
                 style={{
                   flex: 1,

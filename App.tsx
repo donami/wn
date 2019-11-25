@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, InteractionManager } from 'react-native';
+import { Platform, InteractionManager, StatusBar } from 'react-native';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import * as Font from 'expo-font';
@@ -56,6 +56,8 @@ if (Platform.OS === 'android') {
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
   useEffect(() => {
+    StatusBar.setHidden(true);
+
     Font.loadAsync({
       Montserrat: require('./assets/fonts/Montserrat-Regular.ttf'),
       'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
