@@ -11,7 +11,10 @@
     "android": {
       "package": "com.donami.partydrinks",
       "versionCode": 3,
-      "permissions": []
+      "permissions": [],
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-5052932671243699~6323326421"
+      }
     },
     "platforms": ["ios", "android", "web"]
   }

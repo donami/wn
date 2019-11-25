@@ -10,6 +10,7 @@
   "dependencies": {
     "@shoutem/ui": "^1.0.3",
     "expo": "^35.0.1",
+    "expo-ads-admob": "^7.0.0",
     "firebase": "^7.2.3",
     "react": "16.8.3",
     "react-dom": "16.8.3",

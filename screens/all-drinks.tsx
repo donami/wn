@@ -14,6 +14,7 @@ import useDataLoaded from '../hooks/data-loaded';
 import { Drink } from '../types/models';
 import { Icon } from 'react-native-elements';
 import { DropDownMenu, Button, Text } from '@shoutem/ui';
+import BottomAd from '../components/bottom-ad';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
@@ -116,6 +117,7 @@ const AllDrinksScreen = ({ navigation }) => {
           <Text>CLEAR</Text>
         </Button>
       </Animated.View>
+      <BottomAd />
     </View>
   );
 };

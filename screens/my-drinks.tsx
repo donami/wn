@@ -2,6 +2,13 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Trending from '../components/trending';
 import { Tile, Title, Subtitle, Overlay, ImageBackground } from '@shoutem/ui';
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded,
+} from 'expo-ads-admob';
+import BottomAd from '../components/bottom-ad';
 
 export default function MyDrinksScreen({ navigation }) {
   return (
@@ -23,6 +30,7 @@ export default function MyDrinksScreen({ navigation }) {
         navigation={navigation}
         containerStyle={styles.trendingContainer}
       />
+      <BottomAd />
     </View>
   );
 }

@@ -7,6 +7,7 @@ import useDataLoaded from '../hooks/data-loaded';
 import Loader from '../components/loader';
 import { Drink } from '../types/models';
 import { Text } from '@shoutem/ui';
+import BottomAd from '../components/bottom-ad';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
@@ -38,6 +39,7 @@ const FavoritesScreen = ({ navigation }) => {
           </Text>
         </View>
       )}
+      <BottomAd />
     </View>
   );
 };
