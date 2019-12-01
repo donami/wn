@@ -63,7 +63,6 @@ const Tabs = createMaterialTopTabNavigator(
   {
     MyDrinks: {
       screen: MyDrinksScreen,
-
       navigationOptions: {
         title: 'Home',
         tabBarIcon: () => {

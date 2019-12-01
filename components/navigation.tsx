@@ -1,25 +1,31 @@
 import React from 'react';
 
-import { Text } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import Tabs from './tabs';
-import DrinkScreen from '../screens/drink';
 import AboutScreen from '../screens/about';
 import HeaderScreen from '../screens/header';
 import SearchScreen from '../screens/search';
 import SettingsScreen from '../screens/settings';
+import DrinkBottomNavigator from '../screens/drink';
 
 const RootStack = createStackNavigator(
   {
     Home: {
       screen: Tabs,
+      navigationOptions: ({ navigation }) => ({
+        header: props => {
+          return <HeaderScreen />;
+        },
+      }),
+    },
+    Drink: {
+      screen: DrinkBottomNavigator,
       navigationOptions: {
-        header: () => <HeaderScreen />,
+        header: null,
       },
     },
-    Drink: { screen: DrinkScreen, navigationOptions: { header: null } },
     About: { screen: AboutScreen },
     Search: { screen: SearchScreen },
   },
