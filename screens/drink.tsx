@@ -6,6 +6,7 @@ import useDrink from '../hooks/use-drink';
 import { SimpleHtml } from '@shoutem/ui';
 import { View } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements';
+import Instruction from '../components/instruction';
 
 const paddingVertical = 10;
 const paddingHorizontal = 40;
@@ -40,6 +41,15 @@ const Drink = createBottomTabNavigator(
                     p: { marginBottom: 10, lineHeight: 22 },
                   }}
                 />
+              )}
+              {drink && drink.instructions && !!drink.instructions.length && (
+                <React.Fragment>
+                  {drink.instructions.map((item: string, index: number) => {
+                    return (
+                      <Instruction number={index} text={item} key={index} />
+                    );
+                  })}
+                </React.Fragment>
               )}
             </View>
           </DrinkWrapper>

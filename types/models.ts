@@ -3,12 +3,14 @@ export type Drink = {
   title: string;
   description: string;
   image?: string;
+  instructions?: string[];
   ingredients: {
     ingredient: Ingredient;
     optional?: boolean;
     amount: string;
   };
   tags: string[];
+  source?: string;
 };
 
 export type Ingredient = {

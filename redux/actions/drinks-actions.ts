@@ -61,6 +61,7 @@ export const fetchDrinksIfNeeded = () => {
             id: item.id,
             title: data.title,
             tags: data.tags || [],
+            instructions: data.instructions || [],
             image: data.image,
             ingredients: (data.ingredients || []).map(ingredient => {
               return {
