@@ -1,31 +1,38 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Trending from '../components/trending';
-import { Tile, Title, Subtitle, Overlay, ImageBackground } from '@shoutem/ui';
 import {
-  AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded,
-} from 'expo-ads-admob';
+  Tile,
+  Title,
+  Subtitle,
+  Overlay,
+  ImageBackground,
+  Heading,
+} from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
+import { Icon } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function MyDrinksScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <ImageBackground
-        styleName='large-banner'
-        source={require('../assets/christmas-drink.jpg')}
-      >
-        <Tile>
-          <Overlay styleName='image-overlay'>
-            <Title styleName='sm-gutter-horizontal'>
-              Try out this delicious drink with the taste of christmas
-            </Title>
-            <Subtitle>Winter is coming...</Subtitle>
-          </Overlay>
-        </Tile>
-      </ImageBackground>
+      <TouchableOpacity onPress={() => navigation.navigate('AllDrinks')}>
+        <ImageBackground
+          styleName='large-banner'
+          source={require('../assets/all-drinks.jpg')}
+        >
+          <Tile>
+            <Icon
+              raised
+              name='glass-wine'
+              color='#7FC583'
+              type='material-community'
+              reverse
+            />
+            <Title styleName='md-gutter-bottom'>BROWSE ALL DRINKS</Title>
+          </Tile>
+        </ImageBackground>
+      </TouchableOpacity>
       <Trending
         navigation={navigation}
         containerStyle={styles.trendingContainer}
