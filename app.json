@@ -2,15 +2,19 @@
   "name": "drinks",
   "displayName": "app-drinks",
   "expo": {
-    "name": "Party Drinks",
-    "slug": "party-drinks",
+    "name": "Mr Bar - Drink recipes",
+    "slug": "mr-bar",
     "icon": "./assets/app-icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#EEA18B"
+    },
     "sdkVersion": "35.0.0",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "android": {
       "package": "com.donami.partydrinks",
-      "versionCode": 3,
+      "versionCode": 6,
       "permissions": [],
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-5052932671243699~6323326421"

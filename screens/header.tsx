@@ -22,14 +22,13 @@ const HeaderScreen: React.FC<Props> = ({ navigation }) => {
       style={styles.container}
     >
       <View style={styles.menuContainer}>
-        <Icon
-          name='bars'
-          type='font-awesome'
-          color='#fff'
+        <TouchableOpacity
           onPress={() => {
             navigation.openDrawer();
           }}
-        />
+        >
+          <Icon name='bars' type='font-awesome' color='#fff' />
+        </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
         {!visible && (
