@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Animated,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, View, FlatList, Animated } from 'react-native';
 import { useSelector } from 'react-redux';
 import DrinkListItem from '../components/drink-list-item';
 import Loader from '../components/loader';
 import useDataLoaded from '../hooks/data-loaded';
-import { Drink } from '../types/models';
+import { Drink, Ingredient } from '../types/models';
 import { Icon } from 'react-native-elements';
 import { DropDownMenu, Button, Text } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
+import { getIngredientItems } from '../redux/selectors/ingredients';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
@@ -22,32 +16,72 @@ const renderItem = ({ item, navigation }) => (
 
 const AllDrinksScreen = ({ navigation }) => {
   const allDrinks: Drink[] = useSelector(state => state.drinks.items);
+  const allIngredients: Ingredient[] = useSelector(state =>
+    getIngredientItems(state)
+  );
   const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [dataIsLoaded] = useDataLoaded(['drinks', 'tags']);
+  const [dataIsLoaded] = useDataLoaded(['drinks']);
+  // const [dataIsLoaded] = useDataLoaded(['drinks', 'tags']);
   const [isHidden, setIsHidden] = useState(true);
-  const [bounceValue, setBounceValue] = useState(new Animated.Value(200));
-  const tags = useSelector(state => state.tags.items);
+  const [bounceValue, setBounceValue] = useState(new Animated.Value(300));
+  // const tags = useSelector(state => state.tags.items);
 
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  // const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const [allSelectedIngredients, setAllSelectedIngredients] = useState<
+    Ingredient[]
+  >([]);
 
   useEffect(() => {
     setDrinks(allDrinks);
   }, [allDrinks]);
 
+  // useEffect(() => {
+  //   if (selectedCategory) {
+  //     setDrinks(
+  //       allDrinks.filter(drink => {
+  //         return drink.tags.indexOf(selectedCategory.title.toLowerCase()) > -1;
+  //       })
+  //     );
+  //   } else {
+  //     setDrinks(allDrinks);
+  //   }
+  // }, [selectedCategory]);
+
   useEffect(() => {
-    if (selectedCategory) {
-      setDrinks(
-        allDrinks.filter(drink => {
-          return drink.tags.indexOf(selectedCategory.title.toLowerCase()) > -1;
-        })
-      );
-    } else {
-      setDrinks(allDrinks);
+    if (selectedIngredient) {
+      const alreadyExists = allSelectedIngredients.find(ingredient => {
+        return ingredient.id === selectedIngredient.id;
+      });
+
+      if (!alreadyExists) {
+        setAllSelectedIngredients([
+          ...allSelectedIngredients,
+          selectedIngredient,
+        ]);
+      }
     }
-  }, [selectedCategory]);
+  }, [selectedIngredient]);
+
+  useEffect(() => {
+    if (allSelectedIngredients.length > 0) {
+      const ingredientIds = allSelectedIngredients.map(
+        ingredient => ingredient.id
+      );
+      const filteredDrinks = allDrinks.filter(drink => {
+        const hasIngredient = drink.ingredients.find(
+          ingredient => ingredientIds.indexOf(ingredient.ingredient as any) > -1
+        );
+
+        return hasIngredient;
+      });
+
+      setDrinks(filteredDrinks);
+    }
+  }, [allSelectedIngredients]);
 
   const toggleSubview = () => {
-    let toValue = 200;
+    let toValue = 300;
     if (isHidden) {
       toValue = 0;
     }
@@ -76,12 +110,14 @@ const AllDrinksScreen = ({ navigation }) => {
         renderItem={args => renderItem({ ...args, navigation })}
         keyExtractor={(item: Drink) => item.id}
       />
-      <View style={[styles.fixedView, { bottom: isHidden ? 25 : 225 }]}>
+      <View
+        style={[styles.fixedView, { bottom: isHidden ? 25 : 325 }]}
+        onTouchStart={() => {
+          toggleSubview();
+        }}
+      >
         <Icon
           style={styles.fab}
-          onPress={() => {
-            toggleSubview();
-          }}
           name='filter'
           type='font-awesome'
           raised
@@ -93,7 +129,40 @@ const AllDrinksScreen = ({ navigation }) => {
         style={[styles.subView, { transform: [{ translateY: bounceValue }] }]}
       >
         <Text style={{ fontSize: 20, padding: 15 }}>Filter</Text>
-        {tags && !!tags.length && (
+        {allSelectedIngredients && !!allSelectedIngredients.length && (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              padding: 10,
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+            }}
+          >
+            {allSelectedIngredients.map(item => (
+              <View
+                key={item.id}
+                style={styles.tag}
+                onTouchStart={() => {
+                  setAllSelectedIngredients(
+                    allSelectedIngredients.filter(ingredient => {
+                      return ingredient.id !== item.id;
+                    })
+                  );
+                }}
+              >
+                <Text style={styles.tagText}>{item.title}</Text>
+                <Icon
+                  name='times'
+                  type='font-awesome'
+                  size={16}
+                  color='white'
+                />
+              </View>
+            ))}
+          </View>
+        )}
+        {/* {tags && !!tags.length && (
           <DropDownMenu
             styleName='horizontal'
             options={tags}
@@ -103,6 +172,20 @@ const AllDrinksScreen = ({ navigation }) => {
             }}
             titleProperty='title'
             valueProperty='tag.id'
+          />
+        )} */}
+        {allIngredients && !!allIngredients.length && (
+          <DropDownMenu
+            styleName='horizontal'
+            options={allIngredients}
+            selectedOption={
+              selectedIngredient ? selectedIngredient : allIngredients[0]
+            }
+            onOptionSelected={item => {
+              setSelectedIngredient(item);
+            }}
+            titleProperty='title'
+            valueProperty='ingredient.id'
           />
         )}
         <Button
@@ -154,6 +237,22 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#FFFFFF',
-    height: 200,
+    height: 300,
+  },
+  tag: {
+    marginHorizontal: 10,
+    marginBottom: 10,
+    backgroundColor: '#7FC583',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tagText: {
+    marginRight: 5,
+    color: 'white',
   },
 });

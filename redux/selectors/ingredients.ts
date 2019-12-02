@@ -14,3 +14,5 @@ export const getSelectedIngredient = createSelector(
     return entities[selectedId] || null;
   }
 );
+
+export const getIngredientItems = state => state.ingredients.items;

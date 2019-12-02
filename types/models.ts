@@ -8,7 +8,7 @@ export type Drink = {
     ingredient: Ingredient;
     optional?: boolean;
     amount: string;
-  };
+  }[];
   tags: string[];
   source?: string;
 };
