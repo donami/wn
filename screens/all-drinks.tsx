@@ -9,6 +9,7 @@ import { Icon } from 'react-native-elements';
 import { DropDownMenu, Button, Text } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
 import { getIngredientItems } from '../redux/selectors/ingredients';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
@@ -121,7 +122,7 @@ const AllDrinksScreen = ({ navigation }) => {
           name='filter'
           type='font-awesome'
           raised
-          color='#517fa4'
+          color='#7FC583'
           reverse
         />
       </View>
@@ -140,10 +141,11 @@ const AllDrinksScreen = ({ navigation }) => {
             }}
           >
             {allSelectedIngredients.map(item => (
-              <View
+              <TouchableOpacity
                 key={item.id}
                 style={styles.tag}
-                onTouchStart={() => {
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                onPress={() => {
                   setAllSelectedIngredients(
                     allSelectedIngredients.filter(ingredient => {
                       return ingredient.id !== item.id;
@@ -158,7 +160,7 @@ const AllDrinksScreen = ({ navigation }) => {
                   size={16}
                   color='white'
                 />
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         )}
