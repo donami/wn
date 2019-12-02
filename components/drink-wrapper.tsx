@@ -67,12 +67,14 @@ const DrinkWrapper: React.FC<Props> = ({ navigation, children }) => {
                       position: 'absolute',
                       left: 20,
                       backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                      // padding: 20,
                       borderRadius: 100,
                       height: 52,
                       width: 52,
                       justifyContent: 'center',
                       alignItems: 'center',
+                    }}
+                    onTouchStart={() => {
+                      navigation.goBack(null);
                     }}
                   >
                     <Icon
