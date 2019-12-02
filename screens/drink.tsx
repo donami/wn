@@ -88,9 +88,14 @@ const Drink = createBottomTabNavigator(
                       <ListItem
                         key={index}
                         leftAvatar={{
-                          source: {
-                            uri: item.ingredient.image,
-                          },
+                          ...(item.ingredient.image && {
+                            source: {
+                              uri: item.ingredient.image,
+                            },
+                          }),
+                          ...(!item.ingredient.image && {
+                            source: require('../assets/no-image.png'),
+                          }),
                           title: item.ingredient.title[0],
                         }}
                         title={item.ingredient.title}
