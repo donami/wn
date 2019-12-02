@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import { searchAction } from '../redux/actions/search-actions';
@@ -11,8 +11,18 @@ type Props = {
 };
 const HeaderScreen: React.FC<Props> = ({ navigation }) => {
   const [phrase, setPhrase] = useState('');
-  const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
+  const [isHidden, setIsHidden] = useState(true);
+  const [animatedValue, setAnimatedValue] = useState(new Animated.Value(0));
+
+  const start = () => {
+    setIsHidden(!isHidden);
+
+    Animated.timing(animatedValue, {
+      toValue: isHidden ? 1 : 0,
+      duration: 300,
+    }).start();
+  };
 
   return (
     <LinearGradient
@@ -23,6 +33,7 @@ const HeaderScreen: React.FC<Props> = ({ navigation }) => {
     >
       <View style={styles.menuContainer}>
         <TouchableOpacity
+          style={{ padding: 10 }}
           onPress={() => {
             navigation.openDrawer();
           }}
@@ -30,76 +41,71 @@ const HeaderScreen: React.FC<Props> = ({ navigation }) => {
           <Icon name='bars' type='font-awesome' color='#fff' />
         </TouchableOpacity>
       </View>
-      <View style={styles.searchContainer}>
-        {!visible && (
-          <View style={{ alignSelf: 'flex-end', padding: 10, marginRight: 10 }}>
-            <TouchableOpacity onPress={() => setVisible(!visible)}>
-              <Icon name='search' color='#fff' />
-            </TouchableOpacity>
-          </View>
-        )}
-        {visible && (
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flex: 1,
-              padding: 20,
-              flexDirection: 'row',
+      <View style={[styles.searchContainer]}>
+        <Animated.View
+          style={{
+            transform: [
+              {
+                translateX: animatedValue.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [600, 0],
+                }),
+              },
+            ],
+            flex: 1,
+          }}
+        >
+          <SearchBar
+            containerStyle={styles.searchBarContainer}
+            platform={'default'}
+            style={styles.searchBarContainer}
+            lightTheme
+            onSubmitEditing={() => {
+              dispatch(searchAction(phrase));
+              navigation.navigate('Search', { phrase });
+            }}
+            searchIcon={props => (
+              <Icon name='search' color='rgba(255, 255, 255, 0.7)' {...props} />
+            )}
+            clearIcon={false}
+            // clearIcon={props => (
+            //   <Icon
+            //     name='times'
+            //     type='font-awesome'
+            //     color='rgba(255, 255, 255, 0.7)'
+            //     {...props}
+            //   />
+            // )}
+            // leftIconContainerStyle={styles.searchIcon}
+            // rightIconContainerStyle={styles.input}
+            inputContainerStyle={styles.input}
+            placeholder='Search drinks...'
+            placeholderTextColor='rgba(255, 255, 255, 0.7)'
+            inputStyle={{ color: 'rgba(255, 255, 255, 0.7)' }}
+            onChangeText={value => setPhrase(value)}
+            value={phrase}
+          />
+        </Animated.View>
+        <View
+          style={{
+            flex: 1,
+            maxWidth: 50,
+            alignItems: 'flex-end',
+            paddingRight: 20,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              start();
             }}
           >
-            <View style={{ flex: 1 }}>
-              <SearchBar
-                containerStyle={styles.searchBarContainer}
-                platform={'default'}
-                style={styles.searchBarContainer}
-                lightTheme
-                onSubmitEditing={() => {
-                  dispatch(searchAction(phrase));
-                  navigation.navigate('Search', { phrase });
-                }}
-                searchIcon={props => (
-                  <Icon
-                    name='search'
-                    color='rgba(255, 255, 255, 0.7)'
-                    {...props}
-                  />
-                )}
-                clearIcon={props => (
-                  <Icon
-                    name='times'
-                    type='font-awesome'
-                    color='rgba(255, 255, 255, 0.7)'
-                    {...props}
-                  />
-                )}
-                // leftIconContainerStyle={styles.searchIcon}
-                // rightIconContainerStyle={styles.input}
-                inputContainerStyle={styles.input}
-                placeholder='Search drinks...'
-                placeholderTextColor='rgba(255, 255, 255, 0.7)'
-                inputStyle={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                onChangeText={value => setPhrase(value)}
-                value={phrase}
-              />
-            </View>
-            <View style={{ flexGrow: 0, marginRight: 10 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setVisible(!visible);
-                  setPhrase('');
-                }}
-              >
-                <Icon
-                  name='chevron-right'
-                  type='font-awesome'
-                  color='rgba(255, 255, 255, 0.7)'
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+            {!isHidden ? (
+              <Icon name='chevron-right' color='#fff' />
+            ) : (
+              <Icon name='search' color='#fff' />
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </LinearGradient>
   );
@@ -122,6 +128,9 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flex: 2,
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
   },
   searchBarContainer: {
     backgroundColor: 'transparent',

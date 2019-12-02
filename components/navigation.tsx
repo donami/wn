@@ -9,6 +9,21 @@ import HeaderScreen from '../screens/header';
 import SearchScreen from '../screens/search';
 import SettingsScreen from '../screens/settings';
 import DrinkBottomNavigator from '../screens/drink';
+// import { Easing, Animated } from 'react-native';
+
+// const transitionConfig = () => {
+//   return {
+//     transitionSpec: {
+//       duration: 400, // how long the transition will take
+//       easing: Easing.bounce, // easing function to use (https://facebook.github.io/react-native/docs/easing.html)
+//       timing: Animated.timing, // the type of animation to use (timing, spring, decay)
+//       useNativeDriver: true, // delegate all the animation related work to the native layer
+//     },
+//     screenInterpolator: sceneProps => {
+//       // next: add code for customizing the transition animation
+//     },
+//   };
+// };
 
 const RootStack = createStackNavigator(
   {
@@ -30,6 +45,7 @@ const RootStack = createStackNavigator(
     Search: { screen: SearchScreen },
   },
   {
+    // transitionConfig,
     headerMode: 'screen',
   }
 );

@@ -30,27 +30,29 @@ const Drink = createBottomTabNavigator(
                 paddingVertical: 0,
               }}
             >
-              {drink && drink.description && (
-                <SimpleHtml
-                  style={{
-                    margin: 0,
-                    padding: 0,
-                  }}
-                  body={drink.description}
-                  customTagStyles={{
-                    p: { marginBottom: 10, lineHeight: 22 },
-                  }}
-                />
-              )}
-              {drink && drink.instructions && !!drink.instructions.length && (
-                <React.Fragment>
-                  {drink.instructions.map((item: string, index: number) => {
-                    return (
-                      <Instruction number={index} text={item} key={index} />
-                    );
-                  })}
-                </React.Fragment>
-              )}
+              <React.Fragment>
+                {drink && !!drink.description.length && (
+                  <SimpleHtml
+                    style={{
+                      margin: 0,
+                      padding: 0,
+                    }}
+                    body={drink.description}
+                    customTagStyles={{
+                      p: { marginBottom: 10, lineHeight: 22 },
+                    }}
+                  />
+                )}
+                {drink && drink.instructions && !!drink.instructions.length && (
+                  <React.Fragment>
+                    {drink.instructions.map((item: string, index: number) => {
+                      return (
+                        <Instruction number={index} text={item} key={index} />
+                      );
+                    })}
+                  </React.Fragment>
+                )}
+              </React.Fragment>
             </View>
           </DrinkWrapper>
         );
