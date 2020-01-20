@@ -40,6 +40,10 @@ const Trending: React.FC<Props> = ({ containerStyle = {}, navigation }) => {
             >
               <Image
                 styleName='medium-wide'
+                style={{
+                  width: '100%',
+                  maxWidth: '100%',
+                }}
                 source={{
                   uri: item.image,
                 }}
@@ -74,6 +78,5 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: 'white',
     width: 120,
-    maxHeight: 160,
   },
 });
