@@ -1,17 +1,14 @@
 import React from 'react';
-import {
-  // View,
-  StyleSheet,
-  ScrollView,
-  StyleProp,
-} from 'react-native';
-// import { Image } from 'react-native-elements';
-import { getDrinksLoading } from '../redux/selectors/drinks';
+import { StyleSheet, ScrollView, StyleProp } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Card, Image, Subtitle, Caption, View, Title } from '@shoutem/ui';
+
+import { Image, View, Title } from '@shoutem/ui';
+import { getDrinksLoading } from '../redux/selectors/drinks';
 import Loader from './loader';
 import useDataLoaded from '../hooks/data-loaded';
 import { getTrendingEntities } from '../redux/selectors/app';
+import Text from './text';
 
 type Props = {
   navigation: any;
@@ -34,10 +31,10 @@ const Trending: React.FC<Props> = ({ containerStyle = {}, navigation }) => {
       <ScrollView style={styles.itemsContainer} horizontal>
         {(trendingItems || []).map(item => {
           return (
-            <Card
-              style={{ marginRight: 10, width: 120, maxHeight: 160 }}
+            <TouchableOpacity
               key={item.id}
-              onTouchEnd={() => {
+              style={styles.item}
+              onPress={() => {
                 navigation.navigate('Drink', { id: item.id });
               }}
             >
@@ -47,11 +44,14 @@ const Trending: React.FC<Props> = ({ containerStyle = {}, navigation }) => {
                   uri: item.image,
                 }}
               />
-              <View styleName='content'>
-                <Subtitle>{item.title}</Subtitle>
-                {/* <Caption>21 hours ago</Caption> */}
+              <View
+                style={{
+                  padding: 10,
+                }}
+              >
+                <Text>{item.title}</Text>
               </View>
-            </Card>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>
@@ -69,26 +69,11 @@ const styles = StyleSheet.create({
   itemsContainer: {
     flex: 1,
     flexDirection: 'row',
-    // maxHeight: 120,
   },
   item: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 20,
-    padding: 20,
-    marginBottom: 20,
-    marginLeft: 5,
-    // borderColor: '#ccc',
-    // borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: '#F9FAFE',
-    shadowColor: '#8F9AB0',
-    shadowOffset: { width: 1, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 7,
-  },
-  itemTitle: {
-    color: '#555',
+    marginRight: 10,
+    backgroundColor: 'white',
+    width: 120,
+    maxHeight: 160,
   },
 });

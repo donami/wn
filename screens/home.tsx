@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import Trending from '../components/trending';
 import { Tile, Title, ImageBackground } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
@@ -26,30 +26,37 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('AllDrinks')}>
-        <ImageBackground
-          style={{
-            width: windowWidth,
-          }}
-          styleName='large-banner'
-          source={require('../assets/all-drinks.jpg')}
-        >
-          <Tile>
-            <Icon
-              raised
-              name='glass-wine'
-              color='#7FC583'
-              type='material-community'
-              reverse
-            />
-            <Title styleName='md-gutter-bottom'>BROWSE ALL DRINKS</Title>
-          </Tile>
-        </ImageBackground>
-      </TouchableOpacity>
-      <Trending
-        navigation={navigation}
-        containerStyle={styles.trendingContainer}
-      />
+      <ScrollView
+        style={{
+          display: 'flex',
+          flex: 1,
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.navigate('AllDrinks')}>
+          <ImageBackground
+            style={{
+              width: windowWidth,
+            }}
+            styleName='large-banner'
+            source={require('../assets/all-drinks.jpg')}
+          >
+            <Tile>
+              <Icon
+                raised
+                name='glass-wine'
+                color='#7FC583'
+                type='material-community'
+                reverse
+              />
+              <Title styleName='md-gutter-bottom'>BROWSE ALL DRINKS</Title>
+            </Tile>
+          </ImageBackground>
+        </TouchableOpacity>
+        <Trending
+          navigation={navigation}
+          containerStyle={styles.trendingContainer}
+        />
+      </ScrollView>
       <BottomAd />
     </View>
   );
@@ -63,6 +70,7 @@ const styles = StyleSheet.create({
   trendingContainer: {
     marginTop: 20,
     padding: 20,
+    flex: 1,
   },
   titleStyle: {
     color: '#111',
