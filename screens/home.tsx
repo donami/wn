@@ -1,23 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Trending from '../components/trending';
-import {
-  Tile,
-  Title,
-  Subtitle,
-  Overlay,
-  ImageBackground,
-  Heading,
-} from '@shoutem/ui';
+import { Tile, Title, ImageBackground } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function MyDrinksScreen({ navigation }) {
+export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('AllDrinks')}>
         <ImageBackground
+          style={{
+            width: '100%',
+          }}
           styleName='large-banner'
           source={require('../assets/all-drinks.jpg')}
         >

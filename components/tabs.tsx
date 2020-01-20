@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import AllDrinksScreen from '../screens/all-drinks';
-import MyDrinksScreen from '../screens/my-drinks';
+import HomeScreen from '../screens/home';
 import FavoritesScreen from '../screens/favorites';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -62,7 +62,7 @@ const TabBar = props => {
 const Tabs = createMaterialTopTabNavigator(
   {
     MyDrinks: {
-      screen: MyDrinksScreen,
+      screen: HomeScreen,
       navigationOptions: {
         title: 'Home',
         tabBarIcon: () => {
