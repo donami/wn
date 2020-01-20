@@ -5,14 +5,31 @@ import { Tile, Title, ImageBackground } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Dimensions } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
+  const { width } = Dimensions.get('window');
+
+  const [windowWidth, setWindowWidth] = useState(width);
+
+  const dimensionChangeHandler = data => {
+    setWindowWidth(data.window.width);
+  };
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', dimensionChangeHandler);
+
+    return () => {
+      Dimensions.removeEventListener('change', dimensionChangeHandler);
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('AllDrinks')}>
         <ImageBackground
           style={{
-            width: '100%',
+            width: windowWidth,
           }}
           styleName='large-banner'
           source={require('../assets/all-drinks.jpg')}
