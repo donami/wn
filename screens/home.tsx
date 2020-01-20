@@ -57,7 +57,16 @@ export default function HomeScreen({ navigation }) {
           containerStyle={styles.trendingContainer}
         />
       </ScrollView>
-      <BottomAd />
+      <View
+        style={{
+          flex: 1,
+          maxHeight: '10%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <BottomAd />
+      </View>
     </View>
   );
 }
