@@ -34,8 +34,8 @@ const DrinkWrapper: React.FC<Props> = ({ navigation, children }) => {
   }
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1 }}>
+    <React.Fragment>
+      <ScrollView style={{ flex: 1 }}>
         {drink && (
           <React.Fragment>
             <View style={styles.topContainer}>
@@ -156,9 +156,18 @@ const DrinkWrapper: React.FC<Props> = ({ navigation, children }) => {
             </View>
           </React.Fragment>
         )}
+      </ScrollView>
+      <View
+        style={{
+          flex: 1,
+          maxHeight: '10%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <BottomAd />
       </View>
-      <BottomAd />
-    </ScrollView>
+    </React.Fragment>
   );
 };
 
