@@ -1,4 +1,6 @@
-import { firestore } from '../../config/firebase';
+import { firestore, documentId } from '../../config/firebase';
+import { normalizeDrink } from '../../utils/normalize';
+
 export const selectDrink = (itemId: string) => ({
   type: 'SELECT_DRINK',
   payload: {
@@ -6,9 +8,56 @@ export const selectDrink = (itemId: string) => ({
   },
 });
 
+export const fetchTrending = () => {
+  return (dispatch, getState) => {
+    const { trendingIds } = getState().app;
+
+    if (!trendingIds || !trendingIds.length) {
+      return;
+    }
+
+    dispatch({
+      type: 'FETCH_TRENDING',
+    });
+
+    firestore
+      .collection('drinks')
+      .where(documentId, 'in', trendingIds)
+      .get()
+      .then(querySnapshot => {
+        const items = querySnapshot.docs.map(item =>
+          normalizeDrink(item.id, item.data())
+        );
+
+        dispatch(fetchTrendingSuccess({ items }));
+      })
+      .catch(e => {
+        console.warn(e);
+      });
+  };
+};
+
+export const fetchDrinksSuccess = (payload: {
+  items: any[];
+  endCursor?: any;
+  allItemsLoaded?: boolean;
+}) => {
+  return {
+    type: 'FETCH_DRINKS_SUCCESS',
+    payload: payload,
+  };
+};
+
+const fetchTrendingSuccess = (payload: { items: any[]; endCursor?: any }) => {
+  return {
+    type: 'FETCH_TRENDING_SUCCESS',
+    payload: payload,
+  };
+};
+
 export const fetchMoreDrinks = () => {
   return (dispatch, getState) => {
-    const { endCursor, loadingMore } = getState().drinks;
+    const { endCursor, loadingMore, allItemsLoaded } = getState().drinks;
 
     if (!endCursor || loadingMore) {
       return false;
@@ -25,26 +74,16 @@ export const fetchMoreDrinks = () => {
       .limit(10)
       .get()
       .then(querySnapshot => {
-        const items = querySnapshot.docs.map(item => {
-          const data = item.data();
-
-          return {
-            id: item.id,
-            title: data.title,
-            image: data.image,
-            description: data.description,
-          };
-        });
+        const items = querySnapshot.docs.map(item =>
+          normalizeDrink(item.id, item.data())
+        );
 
         const endCursor = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        dispatch({
-          type: 'FETCH_DRINKS_SUCCESS',
-          payload: {
-            items,
-            endCursor,
-          },
-        });
+        console.warn('has endCursor', !!endCursor);
+        dispatch(
+          fetchDrinksSuccess({ items, endCursor, allItemsLoaded: true })
+        );
       })
       .catch(e => {
         console.log(e);
@@ -52,15 +91,8 @@ export const fetchMoreDrinks = () => {
   };
 };
 
-export const fetchDrinksIfNeeded = () => {
+const fetchIngredients = () => {
   return (dispatch, getState) => {
-    const drinkState = getState().app;
-    if (drinkState.loading || drinkState.loaded) {
-      return;
-    }
-    dispatch({
-      type: 'FETCH_DRINKS',
-    });
     dispatch({
       type: 'FETCH_INGREDIENTS',
     });
@@ -95,6 +127,20 @@ export const fetchDrinksIfNeeded = () => {
           },
         });
       });
+  };
+};
+
+export const fetchDrinksIfNeeded = () => {
+  return (dispatch, getState) => {
+    const drinkState = getState().drinks;
+    if (drinkState.loading || drinkState.loaded) {
+      return;
+    }
+    dispatch({
+      type: 'FETCH_DRINKS',
+    });
+
+    dispatch(fetchIngredients());
 
     firestore
       .collection('drinks')
@@ -102,34 +148,13 @@ export const fetchDrinksIfNeeded = () => {
       .limit(10)
       .get()
       .then(querySnapshot => {
-        const items = querySnapshot.docs.map(item => {
-          const data = item.data();
-
-          return {
-            id: item.id,
-            title: data.title,
-            tags: data.tags || [],
-            instructions: data.instructions || [],
-            image: data.image,
-            ingredients: (data.ingredients || []).map(ingredient => {
-              return {
-                ingredient: ingredient.ingredient.id,
-                amount: ingredient.amount,
-              };
-            }),
-            description: data.description,
-          };
-        });
+        const items = querySnapshot.docs.map(item =>
+          normalizeDrink(item.id, item.data())
+        );
 
         const endCursor = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        dispatch({
-          type: 'FETCH_DRINKS_SUCCESS',
-          payload: {
-            items,
-            endCursor,
-          },
-        });
+        dispatch(fetchDrinksSuccess({ items, endCursor }));
       })
       .catch(error => {
         dispatch({

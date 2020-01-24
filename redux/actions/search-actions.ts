@@ -1,5 +1,9 @@
+import { firestore } from '../../config/firebase';
+import { normalizeDrink } from '../../utils/normalize';
+import { fetchDrinksSuccess } from './drinks-actions';
+
 export const searchAction = (phrase: string) => {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch({
       type: 'SEARCH_REQUEST',
       payload: {
@@ -8,23 +12,38 @@ export const searchAction = (phrase: string) => {
     });
 
     return new Promise(resolve => {
-      const {
-        drinks: { entities },
-      } = getState();
+      return firestore
+        .collection('drinks')
+        .get()
+        .then(querySnapshot => {
+          const items = querySnapshot.docs.map(item =>
+            normalizeDrink(item.id, item.data())
+          );
 
-      const results = Object.keys(entities).reduce((acc, id) => {
-        const entity = entities[id];
+          // const endCursor =
+          //   querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        const re = new RegExp(phrase.toLowerCase());
+          dispatch(
+            fetchDrinksSuccess({
+              items,
+              // endCursor,
+            })
+          );
 
-        if (entity.title.toLowerCase().match(re)) {
-          acc.push(entity);
-        }
+          const results = items.reduce((acc, entity) => {
+            const re = new RegExp(phrase.toLowerCase());
 
-        return acc;
-      }, []);
+            if (entity.title.toLowerCase().match(re)) {
+              acc.push(entity);
+            }
 
-      return resolve(results);
+            return acc;
+          }, []);
+          return resolve(results);
+        })
+        .catch(e => {
+          console.log(e);
+        });
     })
       .then(results => {
         dispatch({

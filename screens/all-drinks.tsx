@@ -3,14 +3,17 @@ import { StyleSheet, View, FlatList, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import DrinkListItem from '../components/drink-list-item';
 import Loader from '../components/loader';
-import useDataLoaded from '../hooks/data-loaded';
 import { Drink, Ingredient } from '../types/models';
 import { Icon } from 'react-native-elements';
 import { DropDownMenu, Button, Text } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
 import { getIngredientItems } from '../redux/selectors/ingredients';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { fetchMoreDrinks } from '../redux/actions/drinks-actions';
+import { getDrinksLoaded } from '../redux/selectors/drinks';
+import {
+  fetchMoreDrinks,
+  fetchDrinksIfNeeded,
+} from '../redux/actions/drinks-actions';
 import { getDrinkItems, getDrinksLoadingMore } from '../redux/selectors/drinks';
 
 const renderItem = ({ item, navigation }) => (
@@ -19,6 +22,7 @@ const renderItem = ({ item, navigation }) => (
 
 const AllDrinksScreen = ({ navigation }) => {
   const allDrinks: Drink[] = useSelector(state => getDrinkItems(state));
+  const drinksLoaded: Drink[] = useSelector(state => getDrinksLoaded(state));
   const loadingMore: boolean = useSelector(state =>
     getDrinksLoadingMore(state)
   );
@@ -26,15 +30,19 @@ const AllDrinksScreen = ({ navigation }) => {
     getIngredientItems(state)
   );
   const [drinks, setDrinks] = useState<Drink[]>([]);
-  const [dataIsLoaded] = useDataLoaded(['drinks']);
   const [isHidden, setIsHidden] = useState(true);
   const [bounceValue, setBounceValue] = useState(new Animated.Value(300));
   const dispatch = useDispatch();
+  const allItemsLoaded = useSelector(state => state.drinks.allItemsLoaded);
 
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [allSelectedIngredients, setAllSelectedIngredients] = useState<
     Ingredient[]
   >([]);
+
+  useEffect(() => {
+    dispatch(fetchDrinksIfNeeded());
+  }, []);
 
   useEffect(() => {
     setDrinks(allDrinks);
@@ -90,7 +98,7 @@ const AllDrinksScreen = ({ navigation }) => {
     setIsHidden(!isHidden);
   };
 
-  if (!dataIsLoaded) {
+  if (!drinksLoaded) {
     return <Loader />;
   }
 
@@ -102,7 +110,9 @@ const AllDrinksScreen = ({ navigation }) => {
         renderItem={args => renderItem({ ...args, navigation })}
         keyExtractor={(item: Drink) => item.id}
         onEndReached={() => {
-          dispatch(fetchMoreDrinks());
+          if (!allItemsLoaded) {
+            dispatch(fetchMoreDrinks());
+          }
         }}
         onEndReachedThreshold={0.5}
         initialNumToRender={10}

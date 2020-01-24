@@ -1,33 +1,51 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, ScrollView, StyleProp } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Image, View, Title } from '@shoutem/ui';
-import { getDrinksLoading } from '../redux/selectors/drinks';
+import { getTrendingLoading } from '../redux/selectors/drinks';
 import Loader from './loader';
 import useDataLoaded from '../hooks/data-loaded';
-import { getTrendingEntities } from '../redux/selectors/app';
+import { getTrendingEntities, getTrendingIds } from '../redux/selectors/app';
 import Text from './text';
+import { fetchTrending } from '../redux/actions/drinks-actions';
 
 type Props = {
   navigation: any;
   containerStyle?: StyleProp<any>;
 };
 const Trending: React.FC<Props> = ({ containerStyle = {}, navigation }) => {
-  const loading = useSelector(state => getDrinksLoading(state));
+  const dispatch = useDispatch();
 
-  const [dataIsLoaded] = useDataLoaded(['drinks', 'app']);
+  const [dataIsLoaded] = useDataLoaded(['app']);
   const trendingItems = useSelector(state => getTrendingEntities(state));
+  const trendingIds = useSelector(state => getTrendingIds(state));
+  const trendingLoading = useSelector(state => getTrendingLoading(state));
+
+  useEffect(() => {
+    dispatch(fetchTrending());
+  }, [trendingIds]);
 
   if (!dataIsLoaded) {
     return <Loader />;
   }
 
   return (
-    <View style={{ ...styles.container, ...containerStyle }}>
-      <Title style={{ marginBottom: 5 }}>Trending</Title>
-      {loading && <Loader />}
+    <View
+      style={{
+        ...styles.container,
+        ...containerStyle,
+      }}
+    >
+      <Title
+        style={{
+          marginBottom: 5,
+        }}
+      >
+        Trending
+      </Title>
+      {trendingLoading && <Loader />}
       <ScrollView style={styles.itemsContainer} horizontal>
         {(trendingItems || []).map(item => {
           return (
@@ -35,7 +53,9 @@ const Trending: React.FC<Props> = ({ containerStyle = {}, navigation }) => {
               key={item.id}
               style={styles.item}
               onPress={() => {
-                navigation.navigate('Drink', { id: item.id });
+                navigation.navigate('Drink', {
+                  id: item.id,
+                });
               }}
             >
               <Image

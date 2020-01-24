@@ -4,9 +4,11 @@ const getDrinks = state => state.drinks;
 const getDrinkEntities = state => state.drinks.entities;
 const getDrinkIds = state => state.drinks.ids;
 export const getDrinksLoading = state => state.drinks.loading;
+export const getDrinksLoaded = state => state.drinks.loaded;
 const getIngredientEntities = state => state.ingredients.entities;
 export const getSelectedDrinkId = state => state.drinks.selected;
 export const getDrinksLoadingMore = state => state.drinks.loadingMore;
+export const getTrendingLoading = state => state.drinks.trendingLoading;
 
 export const getDrinkItems = createSelector(
   [getDrinkEntities, getDrinkIds],
