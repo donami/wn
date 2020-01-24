@@ -108,6 +108,7 @@ const Tabs = createMaterialTopTabNavigator(
     },
   },
   {
+    lazy: true,
     tabBarComponent: TabBar,
     tabBarOptions: {
       showIcon: true,

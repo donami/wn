@@ -1,65 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { fetchDrinksIfNeeded } from '../redux/actions/drinks-actions';
-import Loader from './loader';
+// NO LONGER USED, SHOULD BE REMOVED
 
-type Props = {
-  required?: string[];
-};
-type EnhancedProps = Props & {
-  drinksLoaded: boolean;
-  drinksLoading: boolean;
-  fetchDrinks: () => void;
-};
-const EnsureLoaded: React.FC<EnhancedProps> = ({
-  required = [],
-  drinksLoaded,
-  drinksLoading,
-  fetchDrinks,
-  children,
-}) => {
-  const [dataLoading, setDataLoading] = useState(false);
+// import React, { useEffect, useState } from 'react';
+// import { connect } from 'react-redux';
+// import { fetchDrinksIfNeeded } from '../redux/actions/drinks-actions';
+// import Loader from './loader';
 
-  useEffect(() => {
-    const conditions = [];
+// type Props = {
+//   required?: string[];
+// };
+// type EnhancedProps = Props & {
+//   drinksLoaded: boolean;
+//   drinksLoading: boolean;
+//   fetchDrinks: () => void;
+// };
+// const EnsureLoaded: React.FC<EnhancedProps> = ({
+//   required = [],
+//   drinksLoaded,
+//   drinksLoading,
+//   fetchDrinks,
+//   children,
+// }) => {
+//   const [dataLoading, setDataLoading] = useState(false);
 
-    if (required.indexOf('drinks') > -1) {
-      conditions.push(drinksLoading);
-    }
+//   useEffect(() => {
+//     const conditions = [];
 
-    const result = conditions.some(condition => condition);
-    setDataLoading(result);
-  }, [drinksLoading, dataLoading]);
+//     if (required.indexOf('drinks') > -1) {
+//       conditions.push(drinksLoading);
+//     }
 
-  useEffect(() => {
-    if (required.indexOf('drinks') > -1 && !drinksLoaded) {
-      fetchDrinks();
-    }
-  });
+//     const result = conditions.some(condition => condition);
+//     setDataLoading(result);
+//   }, [drinksLoading, dataLoading]);
 
-  if (dataLoading) {
-    return <Loader />;
-  }
+//   useEffect(() => {
+//     if (required.indexOf('drinks') > -1 && !drinksLoaded) {
+//       fetchDrinks();
+//     }
+//   });
 
-  return <React.Fragment>{children}</React.Fragment>;
-};
+//   if (dataLoading) {
+//     return <Loader />;
+//   }
 
-const mapStateToProps = state => {
-  return {
-    drinksLoaded: state.drinks.loaded,
-    drinksLoading: state.drinks.loaded,
-    // loading: getDrinksLoading(state),
-    // drinks: state.drinks.items,
-  };
-};
+//   return <React.Fragment>{children}</React.Fragment>;
+// };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchDrinks: () => dispatch(fetchDrinksIfNeeded()),
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     drinksLoaded: state.drinks.loaded,
+//     drinksLoading: state.drinks.loaded,
+//     // loading: getDrinksLoading(state),
+//     // drinks: state.drinks.items,
+//   };
+// };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EnsureLoaded);
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     fetchDrinks: () => dispatch(fetchDrinksIfNeeded()),
+//   };
+// };
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(EnsureLoaded);
