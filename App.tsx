@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import * as Font from 'expo-font';
 
 import Navigation from './components/navigation';
-import Text from './components/text';
 
 import { store, persistor } from './redux/store/store';
 

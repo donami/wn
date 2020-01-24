@@ -22,5 +22,7 @@ const config = {
 
 firebase.initializeApp(config);
 
+export const documentId = firebase.firestore.FieldPath.documentId();
+
 export const firestore = firebase.firestore();
 export default firebase;

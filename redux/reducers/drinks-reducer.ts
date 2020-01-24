@@ -3,9 +3,39 @@ import { normalize } from '../../utils/normalize';
 const initialState = {
   loaded: false,
   loading: false,
-  items: [],
+  loadingMore: false,
+  ids: [],
   entities: {},
   selected: null,
+  endCursor: null,
+  trendingLoading: false,
+  allItemsLoaded: false,
+};
+
+type MergeOverrides = {
+  loaded?: boolean;
+  loading?: boolean;
+  trendingLoading?: boolean;
+  endCursor?: any;
+  allItemsLoaded?: boolean;
+};
+
+const mergeNewEntities = (
+  prevState: typeof initialState,
+  items: any[],
+  overrides: MergeOverrides = {}
+) => {
+  const mergedIds = [...prevState.ids, ...items.map(item => item.id)];
+  return {
+    ...prevState,
+    ids: Array.from(new Set(mergedIds)),
+    entities: {
+      ...prevState.entities,
+      ...normalize(items),
+    },
+    loadingMore: false,
+    ...overrides,
+  };
 };
 
 const drinksReducer = (state = initialState, action) => {
@@ -18,22 +48,43 @@ const drinksReducer = (state = initialState, action) => {
       };
     }
     case 'FETCH_DRINKS_SUCCESS': {
-      return {
-        ...state,
-        loaded: true,
+      const newState = mergeNewEntities(state, action.payload.items, {
+        endCursor: action.payload.endCursor || state.endCursor,
         loading: false,
-        items: action.payload.items,
-        entities: normalize(action.payload.items),
-      };
+        loaded: true,
+        allItemsLoaded: action.payload.allItemsLoaded || state.allItemsLoaded,
+      });
+      return newState;
     }
     case 'FETCH_DRINKS_FAILURE': {
       return {
         ...state,
         loaded: true,
         loading: false,
-        items: [],
         entities: {},
+        loadingMore: false,
       };
+    }
+
+    case 'FETCH_MORE_DRINKS': {
+      return {
+        ...state,
+        loadingMore: true,
+      };
+    }
+
+    case 'FETCH_TRENDING': {
+      return {
+        ...state,
+        trendingLoading: true,
+      };
+    }
+
+    case 'FETCH_TRENDING_SUCCESS': {
+      const newState = mergeNewEntities(state, action.payload.items, {
+        trendingLoading: false,
+      });
+      return newState;
     }
 
     case 'SELECT_DRINK': {

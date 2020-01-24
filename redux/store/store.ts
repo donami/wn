@@ -27,8 +27,8 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = createStore(
   persistedReducer,
   compose(
-    applyMiddleware(thunk),
-    applyMiddleware(createLogger())
+    applyMiddleware(thunk)
+    // applyMiddleware(createLogger())
   )
 );
 
