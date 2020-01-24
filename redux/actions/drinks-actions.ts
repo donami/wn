@@ -32,7 +32,7 @@ export const fetchTrending = () => {
         dispatch(fetchTrendingSuccess({ items }));
       })
       .catch(e => {
-        console.warn(e);
+        console.log(e);
       });
   };
 };
@@ -80,7 +80,6 @@ export const fetchMoreDrinks = () => {
 
         const endCursor = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        console.warn('has endCursor', !!endCursor);
         dispatch(
           fetchDrinksSuccess({ items, endCursor, allItemsLoaded: true })
         );
