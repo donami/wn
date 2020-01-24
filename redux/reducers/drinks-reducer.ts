@@ -3,9 +3,12 @@ import { normalize } from '../../utils/normalize';
 const initialState = {
   loaded: false,
   loading: false,
+  loadingMore: false,
   items: [],
+  ids: [],
   entities: {},
   selected: null,
+  endCursor: null,
 };
 
 const drinksReducer = (state = initialState, action) => {
@@ -22,8 +25,14 @@ const drinksReducer = (state = initialState, action) => {
         ...state,
         loaded: true,
         loading: false,
+        ids: [...state.ids, ...action.payload.items.map(item => item.id)],
         items: action.payload.items,
-        entities: normalize(action.payload.items),
+        entities: {
+          ...state.entities,
+          ...normalize(action.payload.items),
+        },
+        endCursor: action.payload.endCursor,
+        loadingMore: false,
       };
     }
     case 'FETCH_DRINKS_FAILURE': {
@@ -33,6 +42,14 @@ const drinksReducer = (state = initialState, action) => {
         loading: false,
         items: [],
         entities: {},
+        loadingMore: false,
+      };
+    }
+
+    case 'FETCH_MORE_DRINKS': {
+      return {
+        ...state,
+        loadingMore: true,
       };
     }
 

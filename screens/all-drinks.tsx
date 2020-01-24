@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, FlatList, Animated } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DrinkListItem from '../components/drink-list-item';
 import Loader from '../components/loader';
 import useDataLoaded from '../hooks/data-loaded';
@@ -10,24 +10,27 @@ import { DropDownMenu, Button, Text } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
 import { getIngredientItems } from '../redux/selectors/ingredients';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { fetchMoreDrinks } from '../redux/actions/drinks-actions';
+import { getDrinkItems, getDrinksLoadingMore } from '../redux/selectors/drinks';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
 );
 
 const AllDrinksScreen = ({ navigation }) => {
-  const allDrinks: Drink[] = useSelector(state => state.drinks.items);
+  const allDrinks: Drink[] = useSelector(state => getDrinkItems(state));
+  const loadingMore: boolean = useSelector(state =>
+    getDrinksLoadingMore(state)
+  );
   const allIngredients: Ingredient[] = useSelector(state =>
     getIngredientItems(state)
   );
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [dataIsLoaded] = useDataLoaded(['drinks']);
-  // const [dataIsLoaded] = useDataLoaded(['drinks', 'tags']);
   const [isHidden, setIsHidden] = useState(true);
   const [bounceValue, setBounceValue] = useState(new Animated.Value(300));
-  // const tags = useSelector(state => state.tags.items);
+  const dispatch = useDispatch();
 
-  // const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [allSelectedIngredients, setAllSelectedIngredients] = useState<
     Ingredient[]
@@ -36,18 +39,6 @@ const AllDrinksScreen = ({ navigation }) => {
   useEffect(() => {
     setDrinks(allDrinks);
   }, [allDrinks]);
-
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     setDrinks(
-  //       allDrinks.filter(drink => {
-  //         return drink.tags.indexOf(selectedCategory.title.toLowerCase()) > -1;
-  //       })
-  //     );
-  //   } else {
-  //     setDrinks(allDrinks);
-  //   }
-  // }, [selectedCategory]);
 
   useEffect(() => {
     if (selectedIngredient) {
@@ -110,7 +101,29 @@ const AllDrinksScreen = ({ navigation }) => {
         data={drinks}
         renderItem={args => renderItem({ ...args, navigation })}
         keyExtractor={(item: Drink) => item.id}
+        onEndReached={() => {
+          dispatch(fetchMoreDrinks());
+        }}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={10}
+        ListFooterComponent={
+          <>
+            {loadingMore && (
+              <View
+                style={{
+                  position: 'relative',
+                  paddingVertical: 20,
+                  marginTop: 10,
+                  marginBottom: 10,
+                }}
+              >
+                <Loader />
+              </View>
+            )}
+          </>
+        }
       />
+
       <View
         style={[styles.fixedView, { bottom: isHidden ? 25 : 325 }]}
         onTouchStart={() => {
@@ -164,18 +177,7 @@ const AllDrinksScreen = ({ navigation }) => {
             ))}
           </View>
         )}
-        {/* {tags && !!tags.length && (
-          <DropDownMenu
-            styleName='horizontal'
-            options={tags}
-            selectedOption={selectedCategory ? selectedCategory : tags[0]}
-            onOptionSelected={tag => {
-              setSelectedCategory(tag);
-            }}
-            titleProperty='title'
-            valueProperty='tag.id'
-          />
-        )} */}
+
         {allIngredients && !!allIngredients.length && (
           <DropDownMenu
             styleName='horizontal'
