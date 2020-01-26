@@ -2,8 +2,8 @@
   "name": "drinks",
   "displayName": "app-drinks",
   "expo": {
-    "name": "Mr Bar - Drink recipes",
-    "slug": "mr-bar",
+    "name": "Mr Bartender - Drink recipes",
+    "slug": "mr-bartender",
     "icon": "./assets/app-icon.png",
     "splash": {
       "image": "./assets/splash.png",

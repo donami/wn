@@ -57,7 +57,7 @@ const fetchTrendingSuccess = (payload: { items: any[]; endCursor?: any }) => {
 
 export const fetchMoreDrinks = () => {
   return (dispatch, getState) => {
-    const { endCursor, loadingMore, allItemsLoaded } = getState().drinks;
+    const { endCursor, loadingMore } = getState().drinks;
 
     if (!endCursor || loadingMore) {
       return false;
@@ -81,7 +81,7 @@ export const fetchMoreDrinks = () => {
         const endCursor = querySnapshot.docs[querySnapshot.docs.length - 1];
 
         dispatch(
-          fetchDrinksSuccess({ items, endCursor, allItemsLoaded: true })
+          fetchDrinksSuccess({ items, endCursor, allItemsLoaded: !endCursor })
         );
       })
       .catch(e => {
