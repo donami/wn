@@ -37,6 +37,45 @@ export const fetchTrending = () => {
   };
 };
 
+export const fetchFavorites = () => {
+  return (dispatch, getState) => {
+    const {
+      favorites: { items: ids },
+      drinks,
+    } = getState();
+    const { favoritesLoading: loading, favoritesLoaded: loaded } = drinks;
+
+    if (loading || loaded || !ids || !ids.length) {
+      return;
+    }
+
+    dispatch({
+      type: 'FETCH_FAVORITES',
+    });
+
+    firestore
+      .collection('drinks')
+      .where(documentId, 'in', ids)
+      .get()
+      .then(querySnapshot => {
+        const items = querySnapshot.docs.map(item =>
+          normalizeDrink(item.id, item.data())
+        );
+
+        dispatch(fetchFavoritesSuccess({ items }));
+      })
+      .catch(e => {
+        console.log(e);
+        dispatch({
+          type: 'FETCH_FAVORITES_FAILURE',
+          payload: {
+            error: e,
+          },
+        });
+      });
+  };
+};
+
 export const fetchDrinksSuccess = (payload: {
   items: any[];
   endCursor?: any;
@@ -51,6 +90,13 @@ export const fetchDrinksSuccess = (payload: {
 const fetchTrendingSuccess = (payload: { items: any[]; endCursor?: any }) => {
   return {
     type: 'FETCH_TRENDING_SUCCESS',
+    payload: payload,
+  };
+};
+
+const fetchFavoritesSuccess = (payload: { items: any[] }) => {
+  return {
+    type: 'FETCH_FAVORITES_SUCCESS',
     payload: payload,
   };
 };

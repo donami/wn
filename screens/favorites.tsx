@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, FlatList, View } from 'react-native';
 import DrinkListItem from '../components/drink-list-item';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getFavoriteEntities } from '../redux/selectors/favorites';
 import useDataLoaded from '../hooks/data-loaded';
 import Loader from '../components/loader';
 import { Drink } from '../types/models';
 import { Text } from '@shoutem/ui';
 import BottomAd from '../components/bottom-ad';
+import { fetchFavorites } from '../redux/actions/drinks-actions';
 
 const renderItem = ({ item, navigation }) => (
   <DrinkListItem item={item} navigation={navigation} />
@@ -16,6 +17,12 @@ const renderItem = ({ item, navigation }) => (
 const FavoritesScreen = ({ navigation }) => {
   const [dataIsLoaded] = useDataLoaded(['drinks']);
   const favorites = useSelector(state => getFavoriteEntities(state));
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchFavorites());
+  }, []);
 
   if (!dataIsLoaded) {
     return <Loader />;

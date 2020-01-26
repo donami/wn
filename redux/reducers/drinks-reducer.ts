@@ -10,6 +10,8 @@ const initialState = {
   endCursor: null,
   trendingLoading: false,
   allItemsLoaded: false,
+  favoritesLoaded: false,
+  favoritesLoading: false,
 };
 
 type MergeOverrides = {
@@ -18,6 +20,8 @@ type MergeOverrides = {
   trendingLoading?: boolean;
   endCursor?: any;
   allItemsLoaded?: boolean;
+  favoritesLoading?: boolean;
+  favoritesLoaded?: boolean;
 };
 
 const mergeNewEntities = (
@@ -83,6 +87,30 @@ const drinksReducer = (state = initialState, action) => {
     case 'FETCH_TRENDING_SUCCESS': {
       const newState = mergeNewEntities(state, action.payload.items, {
         trendingLoading: false,
+      });
+      return newState;
+    }
+
+    case 'FETCH_FAVORITES': {
+      return {
+        ...state,
+        favoritesLoading: true,
+        favoritesLoaded: false,
+      };
+    }
+
+    case 'FETCH_FAVORITES_SUCCESS': {
+      const newState = mergeNewEntities(state, action.payload.items, {
+        favoritesLoading: false,
+        favoritesLoaded: true,
+      });
+      return newState;
+    }
+
+    case 'FETCH_FAVORITES_FAILURE': {
+      const newState = mergeNewEntities(state, action.payload.items, {
+        favoritesLoading: false,
+        favoritesLoaded: false,
       });
       return newState;
     }
