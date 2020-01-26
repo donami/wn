@@ -82,7 +82,6 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {/* <Text style={{ marginTop: 200 }}>Hejsan</Text> */}
         <Navigation />
       </PersistGate>
     </Provider>
