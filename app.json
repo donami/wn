@@ -10,11 +10,11 @@
       "backgroundColor": "#EEA18B"
     },
     "sdkVersion": "35.0.0",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "android": {
       "package": "com.donami.partydrinks",
-      "versionCode": 9,
+      "versionCode": 10,
       "permissions": [],
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-5052932671243699~6323326421"
