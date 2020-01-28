@@ -13,7 +13,7 @@
     "expo-ads-admob": "^7.0.0",
     "expo-constants": "^7.0.1",
     "expo-linear-gradient": "^7.0.1",
-    "firebase": "^7.2.3",
+    "firebase": "^7.7.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-native": "0.59.10",
