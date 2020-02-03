@@ -9,6 +9,7 @@ import HeaderScreen from '../screens/header';
 import SearchScreen from '../screens/search';
 import SettingsScreen from '../screens/settings';
 import DrinkBottomNavigator from '../screens/drink';
+import ShoppingListScreen from '../screens/shopping-list';
 // import { Easing, Animated } from 'react-native';
 
 // const transitionConfig = () => {
@@ -54,6 +55,10 @@ const DrawerNavigation = createDrawerNavigator({
   Home: RootStack,
   Settings: {
     screen: SettingsScreen,
+  },
+  ShoppingList: {
+    screen: ShoppingListScreen,
+    navigationOptions: () => ({ title: 'Shopping List' }),
   },
 });
 
