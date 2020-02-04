@@ -136,7 +136,7 @@ export const fetchMoreDrinks = () => {
   };
 };
 
-const fetchIngredients = () => {
+export const fetchIngredients = () => {
   return (dispatch, getState) => {
     dispatch({
       type: 'FETCH_INGREDIENTS',

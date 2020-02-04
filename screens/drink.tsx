@@ -4,9 +4,11 @@ import Text from '../components/text';
 import DrinkWrapper from '../components/drink-wrapper';
 import useDrink from '../hooks/use-drink';
 import { SimpleHtml } from '@shoutem/ui';
-import { View } from 'react-native';
+import { View, ToastAndroid, TouchableOpacity } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements';
 import Instruction from '../components/instruction';
+import { addToShoppingList } from '../redux/actions/shopping-list-actions';
+import { useDispatch } from 'react-redux';
 
 const paddingVertical = 10;
 const paddingHorizontal = 40;
@@ -65,7 +67,9 @@ const Drink = createBottomTabNavigator(
         },
       },
       screen: (props: any) => {
-        const { ingredients } = useDrink();
+        const { drink, ingredients } = useDrink();
+
+        const dispatch = useDispatch();
 
         return (
           <DrinkWrapper {...props}>
@@ -106,6 +110,43 @@ const Drink = createBottomTabNavigator(
                   })}
                 </React.Fragment>
               )}
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(
+                    addToShoppingList({
+                      drinkId: drink.id,
+                      title: drink.title,
+                      lineItems: ingredients.map(item => ({
+                        amount: item.amount,
+                        ingredientId: item.ingredient.id,
+                      })),
+                    })
+                  );
+                  ToastAndroid.showWithGravity(
+                    'Added to shopping list.',
+                    ToastAndroid.LONG,
+                    ToastAndroid.TOP
+                  );
+                }}
+                style={{
+                  marginVertical: 20,
+                  borderColor: '#7FC583',
+                  borderWidth: 1,
+                  borderRadius: 3,
+                  padding: 10,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    color: '#7FC583',
+                  }}
+                >
+                  Add to shopping list
+                </Text>
+              </TouchableOpacity>
             </View>
           </DrinkWrapper>
         );
