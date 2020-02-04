@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   standalone: {},
   standaloneRowFront: {
     alignItems: 'flex-start',
-    paddingLeft: 75,
+    paddingLeft: 20,
     backgroundColor: 'white',
     overflow: 'hidden',
     justifyContent: 'center',
