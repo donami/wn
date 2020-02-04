@@ -37,6 +37,7 @@ const ShoppingListItem: React.FC<Props> = ({ item, onDelete }) => {
           rightOpenValue={-75}
           preview
           previewOpenValue={-75}
+          recalculateHiddenLayout={true}
         >
           <TouchableHighlight
             onPress={onDelete}
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   standalone: {},
   standaloneRowFront: {
     alignItems: 'flex-start',
-    paddingLeft: 75,
+    paddingLeft: 20,
     backgroundColor: 'white',
     overflow: 'hidden',
     justifyContent: 'center',
