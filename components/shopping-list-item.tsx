@@ -37,6 +37,7 @@ const ShoppingListItem: React.FC<Props> = ({ item, onDelete }) => {
           rightOpenValue={-75}
           preview
           previewOpenValue={-75}
+          recalculateHiddenLayout={true}
         >
           <TouchableHighlight
             onPress={onDelete}
