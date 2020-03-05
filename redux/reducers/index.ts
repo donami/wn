@@ -6,6 +6,7 @@ import ingredientReducer from './ingredient-reducer';
 import searchReducer from './search-reducer';
 import tagsReducer from './tags-reducer';
 import appReducer from './app-reducer';
+import shoppingListReducer from './shopping-list-reducer';
 
 // Redux: Root Reducer
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   ingredients: ingredientReducer,
   tags: tagsReducer,
   search: searchReducer,
+  shoppingList: shoppingListReducer,
 });
 
 // Exports
